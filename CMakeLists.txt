@@ -84,7 +84,9 @@ if(MINGW)
 elseif(MSVC)
     set_property(TARGET gguf_quantizer quantizer PROPERTY
         MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-elseif(UNIX)
+elseif(UNIX AND NOT APPLE)
+    # These are GCC-compatible runtime-linking options. Apple Clang uses the
+    # system libc++/compiler runtime and rejects -static-libgcc.
     target_link_options(gguf_quantizer PRIVATE -static-libgcc -static-libstdc++)
     target_link_options(quantizer      PRIVATE -static-libgcc -static-libstdc++)
 endif()
